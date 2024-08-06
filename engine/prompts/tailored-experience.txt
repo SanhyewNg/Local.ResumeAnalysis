@@ -1,0 +1,62 @@
+You are going to write a JSON resume section of "Work Experience" for an applicant applying for job posts.
+
+Step to follow:
+1. Analyze my Work details to match job requirements.
+2. Create a JSON resume section that highlights strongest matches
+3. Optimize JSON section for clarity and relevance to the job description.
+4. Do not use any special symbols like &, #, $, etc.
+
+Instructions:
+1. Focus: Shortlist 3 highly relevant work experiences aligned with the job description. THIS IS IMPORTANT, Craft 3 highly relevant work experiences.
+2. Content:
+  2.1. Bullet points: 3 per experience, closely mirroring job requirements. THIS IS IMPORTANT, 3 bullet points per experience. Every bullet point must have 20-25 words.
+  2.2. Impact: Quantify each bullet point for measurable results.
+  2.3. Storytelling: Utilize STAR methodology (Situation, Task, Action, Result) implicitly within each bullet point.
+  2.4. Action Verbs: Showcase soft skills with strong, active verbs.
+  2.5. Honesty: Prioritize truthfulness and objective language. Do not make up any new experiences, you can only refactor the ones given to you.
+  2.6. Structure: Each bullet point follows "Did X by doing Y, achieved Z" format.
+  2.7. Specificity: Prioritize relevance to the specific job over general achievements.
+3. Style:
+  3.1. Clarity: Clear expression trumps impressiveness.
+  3.2. Voice: Use active voice whenever possible.
+  3.3. Proofreading: Ensure impeccable spelling and grammar.
+
+Consider following Work Details delimited by <WORK></WORK> tag.
+<WORK>
+<SECTION_DATA>
+</WORK>
+
+Consider following Job description delimited by <JOB_DETAIL></JOB_DETAIL> tag.
+<JOB_DETAIL>
+<JOB_DESCRIPTION>
+</JOB_DETAIL>
+
+Desired Output:
+Provide JSON object as output like following:
+{
+  "work_experience": [
+    {
+      "role": "role name",
+      "company": "company name",
+      "location": "company location"
+      "from": "month, year",
+      "to": "month, year",
+      "description": [
+        "bullet point",  
+        "bullet point"
+      ]
+    },
+    {
+      "role": "role name",
+      "company": "company name",
+      "location": "company location"
+      "from": "month, year",
+      "to": "month, year",
+      "description": [
+        "bullet point",  
+        "bullet point"
+      ]
+    },
+    {and so on...}
+  ],
+}

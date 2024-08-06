@@ -1,25 +1,48 @@
 import streamlit as st
 from io import StringIO
 
+from engine import (
+    analyse_resume,
+    analyse_jobdesc,
+    evaluate_resume,
+    generate_coverletter,
+    tailor_resume
+)
+
 # Initialize session state variables if not already done
+if 'page' not in st.session_state:
+    st.session_state.page = "Home"
 if 'resume' not in st.session_state:
     st.session_state.resume = None
 if 'job_description' not in st.session_state:
     st.session_state.job_description = ""
-if 'page' not in st.session_state:
-    st.session_state.page = "Home"
+    
+if 'resume_analysis_result' not in st.session_state:
+    st.session_state.resume_analysis_result = None
+if 'job_desc_analysis_result' not in st.session_state:
+    st.session_state.job_desc_analysis_result = None
+if 'resume_evaluation_result' not in st.session_state:
+    st.session_state.resume_evaluation_result = None
+if 'coverletter_generation_result' not in st.session_state:
+    st.session_state.coverletter_generation_result = None
+if 'resume_tailoring_result' not in st.session_state:
+    st.session_state.resume_tailoring_result = None
 
+
+# Resume Upload on side bar
 def upload_resume():
-    st.sidebar.subheader("Upload Resume")
-    uploaded_file = st.sidebar.file_uploader("Choose a file", type=["pdf", "docx", "txt"])
+    # st.sidebar.subheader("Upload Resume")
+    uploaded_file = st.sidebar.file_uploader("Upload Resume", type=["pdf", "docx", "txt"])
     if uploaded_file is not None:
         st.session_state.resume = uploaded_file
         st.sidebar.text("Resume uploaded successfully.")
 
-def upload_job_description():
-    st.sidebar.subheader("Upload Job Description")
-    job_desc = st.sidebar.text_area("Job Description", value=st.session_state.job_description, height=150, key="job_desc_area")
+# Job description input on side bar
+def input_job_description():
+    # st.sidebar.subheader("Input Job Description")
+    job_desc = st.sidebar.text_area("Input Job Description", value=st.session_state.job_description, height=150, key="job_desc_area")
     st.session_state.job_description = job_desc
+
 
 def Home_page():
     st.title("Welcome to Resume Analysis & Tailoring App")
@@ -30,50 +53,61 @@ def Home_page():
         2. **Enter the job description**: Input the job description in the sidebar. This will be used to tailor your resume.
         3. **Navigate through the pages**: Use the buttons to move between pages and perform various actions like viewing parsed resume, evaluating matching with the job, and tailoring your resume.
     """)
-    st.image("https://via.placeholder.com/700x300.png?text=Resume+Analysis+%26+Tailoring+App", use_column_width=True)
+    st.image("images/jobtailor-architecture.jpg", use_column_width=True)
 
+    # Navigattion buttons    
     cols = st.columns([2, 7, 1])
     with cols[0]:
         if st.button("Get Started"):
-            st.session_state.page = "View Parsed Result"
+            st.session_state.page = "Resume Info"
     with cols[2]:
         if st.button("Help"):
             st.session_state.page = "Help"
 
-def view_parsed_result():
-    st.header("View Parsed Result")
+
+def resume_info_page():
+    st.header("Resume Info")
     if st.session_state.resume:
         st.write(f"Resume file: {st.session_state.resume.name}")
-        if st.session_state.resume.type == "text/plain":
+
+        if st.button("Analyse Resume"): # To call AI engine to get resume analysis result
+            st.session_state.resume_analysis_result = analyse_resume(st.session_state.resume)
+
+        # if st.session_state.resume.type == "text/plain":
+        if st.session_state.resume_analysis_result :
             resume_text = st.session_state.resume.getvalue().decode("utf-8")
             st.text_area("Parsed Resume Content", resume_text, height=300, key="parsed_resume_content")
     else:
         st.warning("Please upload a resume file in the sidebar.")
+
+    # Navigattion buttons    
     cols = st.columns([2, 7, 1])
     # with cols[0]:
     #     if st.button("Home"):
     #         st.session_state.page = "Home"
     with cols[2]:
         if st.button("Next"):
-            st.session_state.page = "Evaluate Matching with a Job"
+            st.session_state.page = "Matching Evaluation"
 
-def evaluate_matching():
-    st.header("Evaluate Matching with a Job")
+def matching_evaluation_page():
+    st.header("Matching Evaluation")
     if st.session_state.resume and st.session_state.job_description:
         st.write("Job Description:")
         st.text_area("Job Description", st.session_state.job_description, height=150, key="eval_job_desc_area")
         st.write("Resume Matching Analysis would be displayed here.")
     else:
         st.warning("Please upload both resume and job description.")
+
+    # Navigattion buttons    
     cols = st.columns([2, 7, 1])
     with cols[0]:
         if st.button("Previous"):
-            st.session_state.page = "View Parsed Result"
+            st.session_state.page = "Resume Info"
     with cols[2]:
         if st.button("Next"):
             st.session_state.page = "Tailor Resume"
 
-def tailor_resume():
+def tailor_resume_page():
     st.header("Tailor Resume")
     if st.session_state.resume:
         st.write("Resume:")
@@ -83,10 +117,12 @@ def tailor_resume():
         st.write("Customize your resume for the job description.")
     else:
         st.warning("Please upload a resume file in the sidebar.")
+
+    # Navigattion buttons    
     cols = st.columns([2, 7, 1])
     with cols[0]:
         if st.button("Previous"):
-            st.session_state.page = "Evaluate Matching with a Job"
+            st.session_state.page = "Matching Evaluation"
     # with cols[2]:
     #     if st.button("Next"):
     #         st.session_state.page = "Help"
@@ -135,17 +171,17 @@ def main():
     st.sidebar.title("Resume Analysis & Tailoring")
     pages = {
         "Home": Home_page,
-        "View Parsed Result": view_parsed_result,
-        "Evaluate Matching with a Job": evaluate_matching,
-        "Tailor Resume": tailor_resume,
+        "Resume Info": resume_info_page,
+        "Matching Evaluation": matching_evaluation_page,
+        "Tailor Resume": tailor_resume_page,
         "Help": help_page
     }
 
     upload_resume()
-    upload_job_description()
+    input_job_description()
     
     # Sidebar for page navigation
-    page = st.sidebar.radio("Go to", options=list(pages.keys()), index=list(pages.keys()).index(st.session_state.page))
+    page = st.sidebar.radio("Navigate Pages", options=list(pages.keys()), index=list(pages.keys()).index(st.session_state.page))
     st.session_state.page = page
     
     # Render the selected page

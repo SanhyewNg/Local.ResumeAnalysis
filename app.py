@@ -75,9 +75,8 @@ def resume_info_page():
 
         # if st.session_state.resume.type == "text/plain":
         if st.session_state.resume_analysis_result :
-            # resume_text = st.session_state.resume_analysis_result.getvalue().decode("utf-8")
-            # st.text_area("Parsed Resume Content", resume_text, height=300, key="parsed_resume_content")
-            st.text_area("Parsed Resume Content", st.session_state.resume_analysis_result, height=500, key="parsed_resume_content")
+            resume_text = st.session_state.resume_analysis_result.getvalue().decode("utf-8")
+            st.text_area("Parsed Resume Content", resume_text, height=300, key="parsed_resume_content")
     else:
         st.warning("Please upload a resume file in the sidebar.")
 

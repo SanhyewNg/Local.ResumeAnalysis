@@ -64,7 +64,6 @@ I want to convert the output directly to JSON hence, the results should contain 
 
 def analyse_resume(resume):
     resume_text = extract_text_from_file(resume)
-    return resume_text
     
     gemini_response = get_gemini_response(resume_extract_prompt + "--" + resume_text)
     # logger.debug(f"resume_to_json response: {res}")

@@ -8,7 +8,7 @@ genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 print("Key:", os.getenv("GOOGLE_API_KEY"))
 
 def get_gemini_response(input):
-    model = genai.GenerativeModel("gemini-pro")
+    model = genai.GenerativeModel("gemini-1.5-pro")
     response = model.generate_content(input)
     return response.text
 

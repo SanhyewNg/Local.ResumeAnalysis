@@ -1,6 +1,3 @@
-import streamlit as st
-from io import StringIO
-
 from engine import (
     analyse_resume,
     analyse_jobdesc,
@@ -9,6 +6,9 @@ from engine import (
     tailor_resume
 )
 
+import streamlit as st
+from io import StringIO
+
 # Initialize session state variables if not already done
 if 'page' not in st.session_state:
     st.session_state.page = "Home"
@@ -16,7 +16,7 @@ if 'resume' not in st.session_state:
     st.session_state.resume = None
 if 'job_description' not in st.session_state:
     st.session_state.job_description = ""
-    
+
 if 'resume_analysis_result' not in st.session_state:
     st.session_state.resume_analysis_result = None
 if 'job_desc_analysis_result' not in st.session_state:
@@ -55,7 +55,7 @@ def Home_page():
     """)
     st.image("images/jobtailor-architecture.jpg", use_column_width=True)
 
-    # Navigattion buttons    
+    # Navigation buttons    
     cols = st.columns([2, 7, 1])
     with cols[0]:
         if st.button("Get Started"):
@@ -75,12 +75,13 @@ def resume_info_page():
 
         # if st.session_state.resume.type == "text/plain":
         if st.session_state.resume_analysis_result :
-            resume_text = st.session_state.resume.getvalue().decode("utf-8")
-            st.text_area("Parsed Resume Content", resume_text, height=300, key="parsed_resume_content")
+            # resume_text = st.session_state.resume_analysis_result.getvalue().decode("utf-8")
+            # st.text_area("Parsed Resume Content", resume_text, height=300, key="parsed_resume_content")
+            st.text_area("Parsed Resume Content", st.session_state.resume_analysis_result, height=500, key="parsed_resume_content")
     else:
         st.warning("Please upload a resume file in the sidebar.")
 
-    # Navigattion buttons    
+    # Navigation buttons    
     cols = st.columns([2, 7, 1])
     # with cols[0]:
     #     if st.button("Home"):
@@ -98,7 +99,7 @@ def matching_evaluation_page():
     else:
         st.warning("Please upload both resume and job description.")
 
-    # Navigattion buttons    
+    # Navigation buttons    
     cols = st.columns([2, 7, 1])
     with cols[0]:
         if st.button("Previous"):
@@ -118,7 +119,7 @@ def tailor_resume_page():
     else:
         st.warning("Please upload a resume file in the sidebar.")
 
-    # Navigattion buttons    
+    # Navigation buttons    
     cols = st.columns([2, 7, 1])
     with cols[0]:
         if st.button("Previous"):

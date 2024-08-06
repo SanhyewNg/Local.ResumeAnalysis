@@ -3,6 +3,7 @@ google.generativeai
 
 PyPDF2
 jinja2
+docx2txt
 python-docx
 
 streamlit

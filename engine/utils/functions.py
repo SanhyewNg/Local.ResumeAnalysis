@@ -1,3 +1,16 @@
+import os
+from dotenv import load_dotenv
+load_dotenv()  ## load all our environment variables
+
+# Import the Generative AI model if needed
+import google.generativeai as genai
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+print("Key:", os.getenv("GOOGLE_API_KEY"))
+
+def get_gemini_response(input):
+    model = genai.GenerativeModel("gemini-pro")
+    response = model.generate_content(input)
+    return response.text
 
 # function to take directory and file name as input and return the txt file contents as string
 def read_prompt(file_path, file_name):
